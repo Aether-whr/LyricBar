@@ -14,6 +14,17 @@
 
 ![整条任务栏](docs/screenshot-taskbar.png)
 
+## 构建
+
+需要 .NET 8 SDK（或者直接用 Visual Studio 打开 `LyricBar.csproj`）：
+
+```
+dotnet build -c Release
+dotnet publish -c Release -r win-x64 --self-contained true -o dist -p:DebugType=none
+```
+
+目标框架 `net8.0-windows10.0.19041.0`，用到 WinRT 的 `Windows.Media.Control`（SMTC），所以必须是 Windows 10 2004 / Windows 11 以上。
+
 ## 直接运行
 
 ```
@@ -21,7 +32,7 @@ dist\LyricBar.exe
 ```
 
 - 首次启动会自动弹出设置界面，先选模式（默认「任务栏内嵌」）。
-- `dist` 是自包含发布版（约 169 MB，内含 .NET 8 运行时），**不需要**另外装 .NET。
+- `dist` 是自包含发布版（约 169 MB，内含 .NET 8 运行时），**不需要**另外装 .NET。仓库里不带这个目录，按上面的命令自己 publish 一次即可。
 - 开机自启：`Win+R` → `shell:startup` → 把 `LyricBar.exe` 的快捷方式丢进去。
 - 退出：托盘图标右键 → 退出，或者条上右键 → 退出。
 - `LyricBar.exe --settings` 启动时直接打开设置界面。
