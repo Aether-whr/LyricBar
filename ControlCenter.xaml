@@ -1,0 +1,762 @@
+<Window x:Class="LyricBar.ControlCenter"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="LyricBar 设置"
+        Width="880" Height="666"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Background="#1B1B20"
+        FontFamily="Segoe UI Variable Text, Segoe UI, Microsoft YaHei UI"
+        TextOptions.TextFormattingMode="Ideal"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
+
+    <Window.Resources>
+
+        <!-- 基础色 -->
+        <SolidColorBrush x:Key="Fg" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="Fg2" Color="#A8FFFFFF"/>
+        <SolidColorBrush x:Key="Fg3" Color="#6CFFFFFF"/>
+        <SolidColorBrush x:Key="Card" Color="#14FFFFFF"/>
+        <SolidColorBrush x:Key="Line" Color="#12FFFFFF"/>
+
+        <!-- 导航项 -->
+        <Style x:Key="NavItem" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource Fg2}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,0,0,2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="bg" CornerRadius="7" Padding="12,9" Background="Transparent">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#0FFFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#1FFFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource Fg}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 分段选择 -->
+        <Style x:Key="Seg" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource Fg2}"/>
+            <Setter Property="FontSize" Value="12.5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="bg" CornerRadius="6" Padding="14,7" Background="#0FFFFFFF">
+                            <ContentPresenter HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#1AFFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#334CC2FF"/>
+                                <Setter Property="Foreground" Value="#FFFFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 开关 -->
+        <Style x:Key="Switch" TargetType="CheckBox">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Border x:Name="track" Width="40" Height="21" CornerRadius="10.5"
+                                Background="#2EFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1">
+                            <Ellipse x:Name="knob" Width="15" Height="15" Fill="#FFD8D8D8"
+                                     HorizontalAlignment="Left" Margin="3,0,0,0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="track" Property="Background" Value="#4CC2FF"/>
+                                <Setter TargetName="track" Property="BorderBrush" Value="#4CC2FF"/>
+                                <Setter TargetName="knob" Property="HorizontalAlignment" Value="Right"/>
+                                <Setter TargetName="knob" Property="Margin" Value="0,0,3,0"/>
+                                <Setter TargetName="knob" Property="Fill" Value="#FF0B1A22"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="track" Property="Opacity" Value="0.85"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 滑块 -->
+        <Style x:Key="SldBtn" TargetType="RepeatButton">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border Height="4" CornerRadius="2" Background="#4CC2FF" VerticalAlignment="Center"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SldBtnEmpty" TargetType="RepeatButton">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border Height="4" CornerRadius="2" Background="Transparent" VerticalAlignment="Center"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SldThumb" TargetType="Thumb">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Ellipse Width="14" Height="14" Fill="#FFFFFFFF"
+                                 Stroke="#4CC2FF" StrokeThickness="2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="Sld" TargetType="Slider">
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid VerticalAlignment="Center">
+                            <Border Height="4" CornerRadius="2" Background="#24FFFFFF" VerticalAlignment="Center"/>
+                            <Track x:Name="PART_Track">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Style="{StaticResource SldBtn}"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Style="{StaticResource SldBtnEmpty}"/>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource SldThumb}"/>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 普通按钮 -->
+        <Style x:Key="Ghost" TargetType="Button">
+            <Setter Property="Foreground" Value="{StaticResource Fg}"/>
+            <Setter Property="FontSize" Value="12.5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bg" CornerRadius="7" Padding="14,8" Background="#14FFFFFF">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#22FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="Accent" TargetType="Button">
+            <Setter Property="Foreground" Value="#FF0B1A22"/>
+            <Setter Property="FontSize" Value="12.5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bg" CornerRadius="7" Padding="16,8" Background="#4CC2FF">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#6FD0FF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="Caption" TargetType="Button">
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Foreground" Value="{StaticResource Fg2}"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bg" Background="Transparent">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#14FFFFFF"/>
+                                <Setter Property="Foreground" Value="{StaticResource Fg}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 分组标题 -->
+        <Style x:Key="Section" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Fg2}"/>
+            <Setter Property="FontSize" Value="11.5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,18,0,8"/>
+        </Style>
+
+        <Style x:Key="RowLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Fg}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="ValueLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Fg3}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+
+        <Style x:Key="Hint" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Fg3}"/>
+            <Setter Property="FontSize" Value="11.5"/>
+            <Setter Property="LineHeight" Value="18"/>
+        </Style>
+    </Window.Resources>
+
+    <Border BorderBrush="#18FFFFFF" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="46"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- 标题栏 -->
+            <Grid Grid.Row="0" Background="Transparent" MouseLeftButtonDown="OnTitleDrag">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
+                    <Border Width="18" Height="18" CornerRadius="5" Background="#4CC2FF">
+                        <TextBlock Text="&#xE8B5;" FontFamily="Segoe MDL2 Assets" FontSize="10"
+                                   Foreground="#FF0B1A22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="LyricBar" Foreground="{StaticResource Fg}" FontSize="13"
+                               FontWeight="SemiBold" VerticalAlignment="Center" Margin="9,0,0,0"/>
+                    <TextBlock x:Name="StatusChip" Text="任务栏歌词" Foreground="{StaticResource Fg3}"
+                               FontSize="11.5" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Button Style="{StaticResource Caption}" Content="&#xE921;" Click="OnMinimize"/>
+                    <Button Style="{StaticResource Caption}" Content="&#xE8BB;" Click="OnClose"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="196"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- 左侧导航 -->
+                <Border Grid.Column="0" BorderBrush="{StaticResource Line}" BorderThickness="0,1,1,0"
+                        Background="Transparent" MouseLeftButtonDown="OnTitleDrag">
+                    <StackPanel Margin="12,10,12,12">
+                        <RadioButton x:Name="Nav0" Style="{StaticResource NavItem}" GroupName="nav"
+                                     IsChecked="True" Checked="OnNav" Tag="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="13" VerticalAlignment="Center"/>
+                                <TextBlock Text="概览" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </RadioButton>
+
+                        <RadioButton x:Name="Nav1" Style="{StaticResource NavItem}" GroupName="nav"
+                                     Checked="OnNav" Tag="1">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE7F4;" FontFamily="Segoe MDL2 Assets" FontSize="13" VerticalAlignment="Center"/>
+                                <TextBlock Text="任务栏内嵌" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </RadioButton>
+
+                        <RadioButton x:Name="Nav2" Style="{StaticResource NavItem}" GroupName="nav"
+                                     Checked="OnNav" Tag="2">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE737;" FontFamily="Segoe MDL2 Assets" FontSize="13" VerticalAlignment="Center"/>
+                                <TextBlock Text="贴边浮窗" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </RadioButton>
+
+                        <RadioButton x:Name="Nav3" Style="{StaticResource NavItem}" GroupName="nav"
+                                     Checked="OnNav" Tag="3">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="13" VerticalAlignment="Center"/>
+                                <TextBlock Text="关于" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </RadioButton>
+
+                        <Border Height="1" Background="{StaticResource Line}" Margin="4,14,4,14"/>
+
+                        <TextBlock x:Name="NavNowPlaying" Text="未在播放" Foreground="{StaticResource Fg3}"
+                                   FontSize="11" TextWrapping="Wrap" Margin="6,0,6,0" LineHeight="17"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- 内容区 -->
+                <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled" Padding="0">
+                    <Grid Margin="26,14,26,26">
+
+                        <!-- ================= 概览 ================= -->
+                        <StackPanel x:Name="Page0">
+                            <TextBlock Text="选择显示方式" Foreground="{StaticResource Fg}" FontSize="20" FontWeight="SemiBold"/>
+                            <TextBlock Text="两种模式的歌词来源、控制能力完全相同，只是摆的地方不一样。随时可以切换。"
+                                       Foreground="{StaticResource Fg3}" FontSize="12.5" Margin="0,6,0,18" TextWrapping="Wrap"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="14"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border x:Name="CardEmbedded" Grid.Column="0" CornerRadius="10" Padding="16,14"
+                                        Background="#12FFFFFF" BorderBrush="#1CFFFFFF" BorderThickness="1"
+                                        Cursor="Hand" MouseLeftButtonDown="OnPickEmbedded">
+                                    <StackPanel>
+                                        <Grid>
+                                            <Border Width="34" Height="34" CornerRadius="9" Background="#334CC2FF"
+                                                    HorizontalAlignment="Left">
+                                                <TextBlock Text="&#xE7F4;" FontFamily="Segoe MDL2 Assets" FontSize="15"
+                                                           Foreground="#4CC2FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <TextBlock x:Name="CheckEmbedded" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets"
+                                                       FontSize="14" Foreground="#4CC2FF" HorizontalAlignment="Right"
+                                                       VerticalAlignment="Top" Visibility="Collapsed"/>
+                                        </Grid>
+                                        <TextBlock Text="任务栏内嵌" Foreground="{StaticResource Fg}" FontSize="15"
+                                                   FontWeight="SemiBold" Margin="0,12,0,0"/>
+                                        <TextBlock Text="歌词条直接长在任务栏上，图标区与托盘之间的空白处，和任务栏融为一体。"
+                                                   Foreground="{StaticResource Fg3}" FontSize="12" Margin="0,6,0,0"
+                                                   TextWrapping="Wrap" LineHeight="18"/>
+                                        <Border Height="34" CornerRadius="7" Background="#33000000" Margin="0,14,0,0">
+                                            <Grid ClipToBounds="True">
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0">
+                                                    <Border Width="16" Height="16" CornerRadius="3" Background="#3FFFFFFF"/>
+                                                    <TextBlock Text="第 1 行歌词在这里滚动" Foreground="#E6FFFFFF" FontSize="11"
+                                                               Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border x:Name="CardFloating" Grid.Column="2" CornerRadius="10" Padding="16,14"
+                                        Background="#12FFFFFF" BorderBrush="#1CFFFFFF" BorderThickness="1"
+                                        Cursor="Hand" MouseLeftButtonDown="OnPickFloating">
+                                    <StackPanel>
+                                        <Grid>
+                                            <Border Width="34" Height="34" CornerRadius="9" Background="#33FFFFFF"
+                                                    HorizontalAlignment="Left">
+                                                <TextBlock Text="&#xE737;" FontFamily="Segoe MDL2 Assets" FontSize="15"
+                                                           Foreground="#DFFFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <TextBlock x:Name="CheckFloating" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets"
+                                                       FontSize="14" Foreground="#4CC2FF" HorizontalAlignment="Right"
+                                                       VerticalAlignment="Top" Visibility="Collapsed"/>
+                                        </Grid>
+                                        <TextBlock Text="贴边浮窗" Foreground="{StaticResource Fg}" FontSize="15"
+                                                   FontWeight="SemiBold" Margin="0,12,0,0"/>
+                                        <TextBlock Text="独立的竖条窗口贴在屏幕左右边缘，显示整段歌词，半个字都不挡任务栏。"
+                                                   Foreground="{StaticResource Fg3}" FontSize="12" Margin="0,6,0,0"
+                                                   TextWrapping="Wrap" LineHeight="18"/>
+                                        <Border Height="34" CornerRadius="7" Background="#33000000" Margin="0,14,0,0">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0">
+                                                <Border Width="14" Height="14" CornerRadius="3" Background="#3FFFFFFF"/>
+                                                <StackPanel Margin="8,0,0,0">
+                                                    <TextBlock Text="当前歌词一句" Foreground="#E6FFFFFF" FontSize="9.5"/>
+                                                    <TextBlock Text="下一句淡一点" Foreground="#66FFFFFF" FontSize="8"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            <TextBlock Text="外观" Style="{StaticResource Section}"/>
+                            <Border CornerRadius="10" Background="{StaticResource Card}" Padding="16,14">
+                                <StackPanel>
+                                    <Grid>
+                                        <TextBlock Text="主题" Style="{StaticResource RowLabel}"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <RadioButton x:Name="Theme0" Style="{StaticResource Seg}" GroupName="theme"
+                                                         Content="跟随系统" Tag="0" Checked="OnTheme"/>
+                                            <RadioButton x:Name="Theme1" Style="{StaticResource Seg}" GroupName="theme"
+                                                         Content="深色" Tag="1" Checked="OnTheme" Margin="6,0"/>
+                                            <RadioButton x:Name="Theme2" Style="{StaticResource Seg}" GroupName="theme"
+                                                         Content="浅色" Tag="2" Checked="OnTheme"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Margin="0,16,0,0">
+                                        <TextBlock Text="歌词时间偏移" Style="{StaticResource RowLabel}"/>
+                                        <TextBlock x:Name="TxtOffset" Text="0 ms" Style="{StaticResource ValueLabel}"
+                                                   Margin="0,0,0,26"/>
+                                    </Grid>
+                                    <Slider x:Name="SldOffset" Style="{StaticResource Sld}" Minimum="-3000" Maximum="3000"
+                                            SmallChange="50" LargeChange="500" TickFrequency="50"
+                                            ValueChanged="OnOffsetChanged" Margin="0,4,0,0"/>
+                                    <TextBlock Text="歌词比声音早，往左调；歌词比声音晚，往右调。"
+                                               Foreground="{StaticResource Fg3}" FontSize="11.5" Margin="0,4,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="当前播放" Style="{StaticResource Section}"/>
+                            <Border CornerRadius="10" Background="{StaticResource Card}" Padding="16,14">
+                                <Grid>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock x:Name="NowTitle" Text="未在播放" Foreground="{StaticResource Fg}"
+                                                   FontSize="13.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock x:Name="NowSub" Text="打开任意播放器（Media Player、浏览器、网易云等）后自动识别"
+                                                   Foreground="{StaticResource Fg3}" FontSize="11.5" Margin="0,4,0,0"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Button Style="{StaticResource Ghost}" Content="重新匹配歌词" Click="OnReloadLyrics"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- ================= 内嵌设置 ================= -->
+                        <StackPanel x:Name="Page1" Visibility="Collapsed">
+                            <TextBlock Text="任务栏内嵌" Foreground="{StaticResource Fg}" FontSize="20" FontWeight="SemiBold"/>
+                            <TextBlock Text="歌词条挂在任务栏窗口中，位于图标区与托盘之间。explorer 重启后会自动重新挂载。"
+                                       Foreground="{StaticResource Fg3}" FontSize="12.5" Margin="0,6,0,0" TextWrapping="Wrap"/>
+
+                            <TextBlock Text="布局" Style="{StaticResource Section}"/>
+                            <Border CornerRadius="10" Background="{StaticResource Card}" Padding="16,14">
+                                <StackPanel>
+                                    <Grid>
+                                        <TextBlock Text="水平位置" Style="{StaticResource RowLabel}"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <RadioButton x:Name="EmbAlign0" Style="{StaticResource Seg}" GroupName="al"
+                                                         Content="靠图标" Tag="0" Checked="OnEmbAlign"/>
+                                            <RadioButton x:Name="EmbAlign1" Style="{StaticResource Seg}" GroupName="al"
+                                                         Content="居中" Tag="1" Checked="OnEmbAlign" Margin="6,0"/>
+                                            <RadioButton x:Name="EmbAlign2" Style="{StaticResource Seg}" GroupName="al"
+                                                         Content="靠托盘" Tag="2" Checked="OnEmbAlign"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,14,0,2"/>
+
+                                    <Grid Margin="0,12,0,0">
+                                        <TextBlock Text="自动宽度" Style="{StaticResource RowLabel}"/>
+                                        <CheckBox x:Name="ChkEmbAuto" Style="{StaticResource Switch}"
+                                                  HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                  Checked="OnEmbAuto" Unchecked="OnEmbAuto"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,12,0,0">
+                                        <TextBlock Text="整体宽度" Style="{StaticResource RowLabel}"/>
+                                        <TextBlock x:Name="TxtEmbWidth" Text="320 px" Style="{StaticResource ValueLabel}"
+                                                   Margin="0,0,0,26"/>
+                                    </Grid>
+                                    <Slider x:Name="SldEmbWidth" Style="{StaticResource Sld}" Minimum="140" Maximum="1200"
+                                            SmallChange="10" LargeChange="60" ValueChanged="OnEmbWidthChanged"/>
+
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,14,0,2"/>
+
+                                    <Grid Margin="0,12,0,0">
+                                        <TextBlock Text="歌词宽度" Style="{StaticResource RowLabel}"/>
+                                        <TextBlock x:Name="TxtEmbLyricWidth" Text="自动" Style="{StaticResource ValueLabel}"
+                                                   Margin="0,0,0,26"/>
+                                    </Grid>
+                                    <Slider x:Name="SldEmbLyricWidth" Style="{StaticResource Sld}" Minimum="0" Maximum="800"
+                                            SmallChange="10" LargeChange="40" ValueChanged="OnEmbLyricWidthChanged"/>
+                                    <TextBlock Text="0 = 占满容器里剩下的空间；拉到多少，歌词区就固定多少，多出来的留白"
+                                               Style="{StaticResource Hint}" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="滚动与边缘" Style="{StaticResource Section}"/>
+                            <Border CornerRadius="10" Background="{StaticResource Card}" Padding="16,14">
+                                <StackPanel>
+                                    <Grid>
+                                        <TextBlock Text="滚动方式" Style="{StaticResource RowLabel}"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <RadioButton x:Name="EmbScroll0" Style="{StaticResource Seg}" GroupName="sc"
+                                                         Content="停-滚-停" Tag="0" Checked="OnEmbScroll"/>
+                                            <RadioButton x:Name="EmbScroll1" Style="{StaticResource Seg}" GroupName="sc"
+                                                         Content="无缝连续" Tag="1" Checked="OnEmbScroll" Margin="6,0"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Margin="0,16,0,0">
+                                        <TextBlock Text="速度自适应" Style="{StaticResource RowLabel}"/>
+                                        <CheckBox x:Name="ChkEmbScrollAuto" Style="{StaticResource Switch}"
+                                                  HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                  Checked="OnEmbScrollAuto" Unchecked="OnEmbScrollAuto"/>
+                                    </Grid>
+                                    <TextBlock Text="按这句话还能显示多久倒推速度：长句滚快一点、短句慢慢走，正好在一句结束时滚完。拿不到时间轴的播放器回落成下面的固定速度"
+                                               Style="{StaticResource Hint}" Margin="0,6,0,0" TextWrapping="Wrap"/>
+
+                                    <Grid Margin="0,16,0,0">
+                                        <TextBlock Text="滚动速度" Style="{StaticResource RowLabel}"/>
+                                        <TextBlock x:Name="TxtEmbScrollSpeed" Text="40 px/s" Style="{StaticResource ValueLabel}"
+                                                   Margin="0,0,0,26"/>
+                                    </Grid>
+                                    <Slider x:Name="SldEmbScrollSpeed" Style="{StaticResource Sld}" Minimum="10" Maximum="200"
+                                            SmallChange="5" LargeChange="20" ValueChanged="OnEmbScrollSpeedChanged"/>
+
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,14,0,2"/>
+
+                                    <Grid Margin="0,12,0,0">
+                                        <TextBlock Text="边缘渐隐" Style="{StaticResource RowLabel}"/>
+                                        <TextBlock x:Name="TxtEmbFade" Text="14 px" Style="{StaticResource ValueLabel}"
+                                                   Margin="0,0,0,26"/>
+                                    </Grid>
+                                    <Slider x:Name="SldEmbFade" Style="{StaticResource Sld}" Minimum="0" Maximum="60"
+                                            SmallChange="2" LargeChange="10" ValueChanged="OnEmbFadeChanged"/>
+                                    <TextBlock Text="歌词左右两端线性淡出；右侧那道淡出正好压在控制按钮的边界上，接缝不会硬切"
+                                               Style="{StaticResource Hint}" Margin="0,8,0,0" TextWrapping="Wrap"/>
+
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,14,0,2"/>
+
+                                    <Grid Margin="0,12,0,0">
+                                        <TextBlock Text="歌名宽度" Style="{StaticResource RowLabel}"/>
+                                        <TextBlock x:Name="TxtTrackWidth" Text="整体宽度的 40%" Style="{StaticResource ValueLabel}"
+                                                   Margin="0,0,0,26"/>
+                                    </Grid>
+                                    <Slider x:Name="SldTrackWidth" Style="{StaticResource Sld}" Minimum="10" Maximum="70"
+                                            SmallChange="5" LargeChange="10" ValueChanged="OnTrackWidthChanged"/>
+                                    <TextBlock Text="歌名那一列最多占整体宽度多少，默认 40%（2/5）。超出的部分滚动显示"
+                                               Style="{StaticResource Hint}" Margin="0,8,0,0" TextWrapping="Wrap"/>
+
+                                    <Grid Margin="0,16,0,0">
+                                        <TextBlock Text="歌名滚动间隔" Style="{StaticResource RowLabel}"/>
+                                        <TextBlock x:Name="TxtTrackHold" Text="1.0 s" Style="{StaticResource ValueLabel}"
+                                                   Margin="0,0,0,26"/>
+                                    </Grid>
+                                    <Slider x:Name="SldTrackHold" Style="{StaticResource Sld}" Minimum="2" Maximum="50"
+                                            SmallChange="1" LargeChange="5" ValueChanged="OnTrackHoldChanged"/>
+                                    <TextBlock Text="歌名滚到末尾后停多久再回卷，默认 1 秒"
+                                               Style="{StaticResource Hint}" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="样式" Style="{StaticResource Section}"/>
+                            <Border CornerRadius="10" Background="{StaticResource Card}" Padding="16,14">
+                                <StackPanel>
+                                    <Grid>
+                                        <TextBlock Text="外观" Style="{StaticResource RowLabel}"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <RadioButton x:Name="EmbStyle0" Style="{StaticResource Seg}" GroupName="st"
+                                                         Content="纯文字" Tag="0" Checked="OnEmbStyle"/>
+                                            <RadioButton x:Name="EmbStyle1" Style="{StaticResource Seg}" GroupName="st"
+                                                         Content="圆角卡片" Tag="1" Checked="OnEmbStyle" Margin="6,0"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Margin="0,16,0,0">
+                                        <TextBlock Text="强调色融合" Style="{StaticResource RowLabel}"/>
+                                        <TextBlock x:Name="TxtEmbBlend" Text="0%" Style="{StaticResource ValueLabel}"
+                                                   Margin="0,0,0,26"/>
+                                    </Grid>
+                                    <Slider x:Name="SldEmbBlend" Style="{StaticResource Sld}" Minimum="0" Maximum="1"
+                                            SmallChange="0.05" LargeChange="0.2" ValueChanged="OnEmbBlendChanged"/>
+
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,14,0,2"/>
+
+                                    <Grid Margin="0,12,0,0">
+                                        <TextBlock Text="字号" Style="{StaticResource RowLabel}"/>
+                                        <TextBlock x:Name="TxtEmbFont" Text="13 px" Style="{StaticResource ValueLabel}"
+                                                   Margin="0,0,0,26"/>
+                                    </Grid>
+                                    <Slider x:Name="SldEmbFont" Style="{StaticResource Sld}" Minimum="9" Maximum="20"
+                                            SmallChange="0.5" LargeChange="2" ValueChanged="OnEmbFontChanged"/>
+
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,14,0,2"/>
+
+                                    <Grid Margin="0,12,0,0">
+                                        <TextBlock Text="背景不透明度" Style="{StaticResource RowLabel}"/>
+                                        <TextBlock x:Name="TxtEmbBgOpacity" Text="100%" Style="{StaticResource ValueLabel}"
+                                                   Margin="0,0,0,26"/>
+                                    </Grid>
+                                    <Slider x:Name="SldEmbBgOpacity" Style="{StaticResource Sld}" Minimum="0" Maximum="100"
+                                            SmallChange="5" LargeChange="20" ValueChanged="OnEmbBgOpacityChanged"/>
+                                    <TextBlock Text="拉到 0 就完全透出任务栏和壁纸，只留文字与图标（文字会自带一层阴影保证可读）"
+                                               Style="{StaticResource Hint}" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="内容" Style="{StaticResource Section}"/>
+                            <Border CornerRadius="10" Background="{StaticResource Card}" Padding="16,14">
+                                <StackPanel>
+                                    <Grid>
+                                        <TextBlock Text="显示封面" Style="{StaticResource RowLabel}"/>
+                                        <CheckBox x:Name="ChkEmbCover" Style="{StaticResource Switch}"
+                                                  HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                  Checked="OnEmbToggle" Unchecked="OnEmbToggle"/>
+                                    </Grid>
+                                    <Grid Margin="0,14,0,0">
+                                        <TextBlock Text="显示歌名" Style="{StaticResource RowLabel}"/>
+                                        <CheckBox x:Name="ChkEmbTrack" Style="{StaticResource Switch}"
+                                                  HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                  Checked="OnEmbToggle" Unchecked="OnEmbToggle"/>
+                                    </Grid>
+                                    <Grid Margin="0,14,0,0">
+                                        <TextBlock Text="悬停显示上一首 / 播放 / 下一首" Style="{StaticResource RowLabel}"/>
+                                        <CheckBox x:Name="ChkEmbControls" Style="{StaticResource Switch}"
+                                                  HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                  Checked="OnEmbToggle" Unchecked="OnEmbToggle"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- ================= 浮窗设置 ================= -->
+                        <StackPanel x:Name="Page2" Visibility="Collapsed">
+                            <TextBlock Text="贴边浮窗" Foreground="{StaticResource Fg}" FontSize="20" FontWeight="SemiBold"/>
+                            <TextBlock Text="竖条窗口贴在屏幕工作区边缘，自动避开任务栏与多显示器边界。"
+                                       Foreground="{StaticResource Fg3}" FontSize="12.5" Margin="0,6,0,0" TextWrapping="Wrap"/>
+
+                            <TextBlock Text="位置" Style="{StaticResource Section}"/>
+                            <Border CornerRadius="10" Background="{StaticResource Card}" Padding="16,14">
+                                <StackPanel>
+                                    <Grid>
+                                        <TextBlock Text="贴哪一侧" Style="{StaticResource RowLabel}"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <RadioButton x:Name="FloatSide0" Style="{StaticResource Seg}" GroupName="fs"
+                                                         Content="屏幕左侧" Tag="0" Checked="OnFloatSide"/>
+                                            <RadioButton x:Name="FloatSide1" Style="{StaticResource Seg}" GroupName="fs"
+                                                         Content="屏幕右侧" Tag="1" Checked="OnFloatSide" Margin="6,0"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Margin="0,16,0,0">
+                                        <TextBlock Text="宽度" Style="{StaticResource RowLabel}"/>
+                                        <TextBlock x:Name="TxtFloatWidth" Text="236 px" Style="{StaticResource ValueLabel}"
+                                                   Margin="0,0,0,26"/>
+                                    </Grid>
+                                    <Slider x:Name="SldFloatWidth" Style="{StaticResource Sld}" Minimum="160" Maximum="460"
+                                            SmallChange="4" LargeChange="20" ValueChanged="OnFloatWidthChanged"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="样式" Style="{StaticResource Section}"/>
+                            <Border CornerRadius="10" Background="{StaticResource Card}" Padding="16,14">
+                                <StackPanel>
+                                    <Grid>
+                                        <TextBlock Text="字号" Style="{StaticResource RowLabel}"/>
+                                        <TextBlock x:Name="TxtFloatFont" Text="12.5 px" Style="{StaticResource ValueLabel}"
+                                                   Margin="0,0,0,26"/>
+                                    </Grid>
+                                    <Slider x:Name="SldFloatFont" Style="{StaticResource Sld}" Minimum="9" Maximum="22"
+                                            SmallChange="0.5" LargeChange="2" ValueChanged="OnFloatFontChanged"/>
+
+                                    <Grid Margin="0,16,0,0">
+                                        <TextBlock Text="不透明度" Style="{StaticResource RowLabel}"/>
+                                        <TextBlock x:Name="TxtFloatOpacity" Text="92%" Style="{StaticResource ValueLabel}"
+                                                   Margin="0,0,0,26"/>
+                                    </Grid>
+                                    <Slider x:Name="SldFloatOpacity" Style="{StaticResource Sld}" Minimum="0.3" Maximum="1"
+                                            SmallChange="0.02" LargeChange="0.1" ValueChanged="OnFloatOpacityChanged"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="内容" Style="{StaticResource Section}"/>
+                            <Border CornerRadius="10" Background="{StaticResource Card}" Padding="16,14">
+                                <StackPanel>
+                                    <Grid>
+                                        <TextBlock Text="显示封面" Style="{StaticResource RowLabel}"/>
+                                        <CheckBox x:Name="ChkFloatCover" Style="{StaticResource Switch}"
+                                                  HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                  Checked="OnFloatToggle" Unchecked="OnFloatToggle"/>
+                                    </Grid>
+                                    <Grid Margin="0,14,0,0">
+                                        <TextBlock Text="显示进度条" Style="{StaticResource RowLabel}"/>
+                                        <CheckBox x:Name="ChkFloatProgress" Style="{StaticResource Switch}"
+                                                  HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                  Checked="OnFloatToggle" Unchecked="OnFloatToggle"/>
+                                    </Grid>
+                                    <Grid Margin="0,14,0,0">
+                                        <TextBlock Text="显示控制按钮" Style="{StaticResource RowLabel}"/>
+                                        <CheckBox x:Name="ChkFloatControls" Style="{StaticResource Switch}"
+                                                  HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                  Checked="OnFloatToggle" Unchecked="OnFloatToggle"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- ================= 关于 ================= -->
+                        <StackPanel x:Name="Page3" Visibility="Collapsed">
+                            <TextBlock Text="关于" Foreground="{StaticResource Fg}" FontSize="20" FontWeight="SemiBold"/>
+
+                            <TextBlock Text="歌词来源" Style="{StaticResource Section}"/>
+                            <Border CornerRadius="10" Background="{StaticResource Card}" Padding="16,14">
+                                <StackPanel>
+                                    <TextBlock Text="1. 本地 LRC（优先）" Foreground="{StaticResource Fg}" FontSize="12.5"/>
+                                    <TextBlock x:Name="LrcPathText" Text="%APPDATA%\LyricBar\lyrics\歌手 - 歌名.lrc"
+                                               Foreground="{StaticResource Fg3}" FontSize="11.5" Margin="0,4,0,10"
+                                               TextWrapping="Wrap"/>
+                                    <TextBlock Text="2. LRCLIB 公共库" Foreground="{StaticResource Fg}" FontSize="12.5"/>
+                                    <TextBlock Text="3. 网易云音乐（LRCLIB 没命中时兜底）"
+                                               Foreground="{StaticResource Fg}" FontSize="12.5" Margin="0,10,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="已知边界" Style="{StaticResource Section}"/>
+                            <Border CornerRadius="10" Background="{StaticResource Card}" Padding="16,14">
+                                <StackPanel>
+                                    <TextBlock Foreground="{StaticResource Fg2}" FontSize="12" TextWrapping="Wrap" LineHeight="20"
+                                               Text="· 部分播放器（例如 B 站客户端）不向系统上报播放进度，此时无法逐行高亮，进度条按歌词时长估算。&#10;· 歌词按「标题 + 歌手」模糊匹配，同名歌曲可能匹配到别的版本，可手动放 LRC 覆盖。&#10;· 内嵌模式依赖任务栏窗口结构，仅在 Windows 11 任务栏上验证过。"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="操作" Style="{StaticResource Section}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource Ghost}" Content="打开歌词目录" Click="OnOpenLyricsFolder"/>
+                                <Button Style="{StaticResource Ghost}" Content="打开设置文件" Click="OnOpenSettingsFile" Margin="8,0,0,0"/>
+                                <Button Style="{StaticResource Ghost}" Content="退出 LyricBar" Click="OnQuit" Margin="8,0,0,0"/>
+                            </StackPanel>
+
+                            <TextBlock Text="v2.0 · 双模式" Foreground="{StaticResource Fg3}" FontSize="11.5" Margin="0,22,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

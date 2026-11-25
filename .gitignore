@@ -1,0 +1,14 @@
+# 构建产物
+bin/
+obj/
+dist/
+
+# 运行时数据（每个用户自己的配置与歌词）
+data/
+lyricbar.log
+
+# 临时文件
+*.user
+*.suo
+.vs/
+*.tmp
