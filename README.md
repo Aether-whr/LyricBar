@@ -1,3 +1,13 @@
+## 下载安装
+
+不想自己编译的话，直接下安装包：
+
+**[LyricBar-Setup.exe](https://github.com/Aether-whr/LyricBar/releases/download/v1.2.0/LyricBar-Setup.exe)** —— 67 MB，单文件，双击即装。
+
+- 装到 `%LOCALAPPDATA%\Programs\LyricBar`，自动建桌面和开始菜单快捷方式，并把卸载入口写进「应用和功能」
+- 不需要预装 .NET：程序本体自带 .NET 8 运行时
+- 卸载：开始菜单「卸载 LyricBar」，或设置 → 应用 → LyricBar
+- 首次运行 Windows 可能弹 SmartScreen（安装包未签名），点「更多信息 → 仍要运行」
 # LyricBar — Windows 任务栏歌词条
 
 在 **Windows 任务栏里**（图标区和托盘之间那段空白）直接显示当前播放的歌词，带封面、上一首 / 播放暂停 / 下一首按钮。另外还保留一种 **贴边浮窗** 形态：竖条贴在屏幕左右边缘，显示整段滚动歌词。
