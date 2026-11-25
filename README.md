@@ -2,7 +2,7 @@
 
 不想自己编译的话，直接下安装包：
 
-**[LyricBar-Setup.exe](https://github.com/Aether-whr/LyricBar/releases/download/v1.2.5/LyricBar-Setup.exe)** —— 67 MB，单文件，双击即装。
+**[LyricBar-Setup.exe](https://github.com/Aether-whr/LyricBar/releases/download/v1.2.6/LyricBar-Setup.exe)** —— 67 MB，单文件，双击即装。
 
 - 装到 `%LOCALAPPDATA%\Programs\LyricBar`，自动建桌面和开始菜单快捷方式，并把卸载入口写进「应用和功能」
 - 不需要预装 .NET：程序本体自带 .NET 8 运行时
