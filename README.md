@@ -2,7 +2,7 @@
 
 不想自己编译的话，直接下安装包：
 
-**[LyricBar-Setup.exe](https://github.com/Aether-whr/LyricBar/releases/download/v1.2.9/LyricBar-Setup.exe)** —— 67 MB，单文件，双击即装。
+**[LyricBar-Setup.exe](https://github.com/Aether-whr/LyricBar/releases/download/v1.2.10/LyricBar-Setup.exe)** —— 67 MB，单文件，双击即装。
 
 - 装到 `%LOCALAPPDATA%\Programs\LyricBar`，自动建桌面和开始菜单快捷方式，并把卸载入口写进「应用和功能」
 - 不需要预装 .NET：程序本体自带 .NET 8 运行时
@@ -55,7 +55,7 @@ dist\LyricBar.exe
 
 ![概览](docs/settings-page0.png)
 
-**任务栏内嵌** —— 水平位置（靠图标 / 居中 / 靠托盘）、整体宽度、歌词宽度、**全屏时的显示层级（让位 / 始终置顶）**、滚动方式与速度、边缘渐隐、歌名宽度比例、歌名滚动间隔、外观（纯文字 / 圆角卡片）、强调色融合度、字号、**背景不透明度**、**背景色（跟随任务栏 / 自定义 #RRGGBB 或预设色）**、显示项：
+**任务栏内嵌** —— 水平位置（靠图标 / 居中 / 靠托盘）、整体宽度、歌词宽度、**全屏时的显示层级（让位 / 始终置顶）**、滚动方式与速度、边缘渐隐、歌名宽度比例、歌名滚动间隔、外观（纯文字 / 圆角卡片）、强调色融合度、字号、**背景不透明度**、**背景色（跟随任务栏 / 自定义 #RRGGBB、预设色或取色盘）**、显示项：
 
 ![任务栏内嵌设置](docs/settings-page1.png)
 
@@ -98,7 +98,9 @@ dist\LyricBar.exe
 | 放进去（首选） | 把窗口样式改成 `WS_CHILD` 后 `SetParent` 到 `Shell_TrayWnd`，成为任务栏真正的子窗口，视觉上和任务栏融为一体 |
 | 放进去（回退） | 若系统拒绝跨进程 `SetParent`（`ERROR_ACCESS_DENIED`，例如 explorer 以不同完整性级别运行），自动退化成「覆盖」：一个无边框、`WS_EX_NOACTIVATE`、`TOPMOST` 的窗口精确盖在那段空白上，每帧重新顶到最前，观感一致 |
 | 底色 | `BitBlt + CAPTUREBLT` 抓 DWM 合成后的任务栏画面，6 点采样取中位数（避开悬停高亮 / tooltip）。采样区间跟着对齐方式走（贴托盘就在托盘那侧采），所以开了 TranslucentTB 这类透明工具、任务栏下透出模糊壁纸时，颜色也能贴合；采样点落差过大或取不到，退回主题中性色。前景色按底色亮度自动取亮字或暗字 |
-| 背景不透明度 | 设置里 0–100% 可调：100% 是实色底（跟随任务栏采样色），0% 完全透出任务栏与壁纸，只剩封面、文字和一个 2.5 px 强调色条。半透明以下会给文字加一层投影保证可读。低于 100% 时窗口切换成分层窗口（`AllowsTransparency`），所以改这个值会重建一次窗口——视觉上无感。底色留 1/255 而不是全 0，避免整窗变成逐像素点击穿透（那样右键菜单和悬停按钮就失灵了） |
+| 取色盘 | 背景色选「自定义」后右边有「色盘…」按钮：SV 方块（横轴饱和度、纵轴明度）+ 色相条，拖动即实时改任务栏条的颜色，同时把 `#RRGGBB` 写回输入框 |
+| 显示层级 | 「全屏应用时」两档：**让位**（默认）——前台窗口铺满整块屏幕就自动把条藏起来；**始终置顶**——永远压在最上面。判定除了 `SHQueryUserNotificationState`（只认 D3D 全屏与演示模式），还会比对前台窗口矩形与显示器 `rcMonitor`，无边框全屏、视频全屏都能识别 |
+| 开机自启 | 设置「概览」里的开关，勾上即写 `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` 的 `LyricBar` 值，取消即删；走 HKCU，不需要管理员权限 || 背景不透明度 | 设置里 0–100% 可调：100% 是实色底（跟随任务栏采样色），0% 完全透出任务栏与壁纸，只剩封面、文字和一个 2.5 px 强调色条。半透明以下会给文字加一层投影保证可读。低于 100% 时窗口切换成分层窗口（`AllowsTransparency`），所以改这个值会重建一次窗口——视觉上无感。底色留 1/255 而不是全 0，避免整窗变成逐像素点击穿透（那样右键菜单和悬停按钮就失灵了） |
 | 不抢焦点 | `WS_EX_NOACTIVATE` + `WS_EX_TOOLWINDOW`：点按钮不会把你正在用的窗口切走，也不出现在 Alt+Tab 里 |
 | 跟随系统 | 每秒核对任务栏句柄，explorer 重启后自动重建；每 40 帧重算位置与底色，明暗主题、图标数量变化都会跟上；任务栏自动隐藏 / 全屏应用时一起让位；explorer 刚启动、`ReBarWindow32` 还没建好时先等，不会乱跳位置 |
 | 不闪托盘 | 覆盖模式下让自己浮在最上面，本来每帧都在 `SetWindowPos(HWND_TOPMOST)`——这会逼 explorer 不停重排合成层，任务栏右侧那片图标跟着闪。现在先用 `WindowFromPoint` + `GetAncestor(GA_ROOT)` 看一眼自己是不是已经在最上面，是就不动。让位判断也加了投票：自动隐藏 / 全屏这类状态要连续 3 次（约 1.5 秒）一致才生效，`SHQueryUserNotificationState` 只认 `QUNS_RUNNING_D3D_FULL_SCREEN(3)` 和 `QUNS_PRESENTATION_MODE(4)`——`QUNS_BUSY(2)` 在窗口切换、通知弹出的瞬间会跳一下，跟着它就会「消失一下又回来」 |
