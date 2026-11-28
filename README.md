@@ -2,7 +2,7 @@
 
 不想自己编译的话，直接下安装包：
 
-**[LyricBar-Setup.exe](https://github.com/Aether-whr/LyricBar/releases/download/v1.2.7/LyricBar-Setup.exe)** —— 67 MB，单文件，双击即装。
+**[LyricBar-Setup.exe](https://github.com/Aether-whr/LyricBar/releases/download/v1.2.8/LyricBar-Setup.exe)** —— 67 MB，单文件，双击即装。
 
 - 装到 `%LOCALAPPDATA%\Programs\LyricBar`，自动建桌面和开始菜单快捷方式，并把卸载入口写进「应用和功能」
 - 不需要预装 .NET：程序本体自带 .NET 8 运行时
@@ -43,7 +43,7 @@ dist\LyricBar.exe
 
 - 首次启动会自动弹出设置界面，先选模式（默认「任务栏内嵌」）。
 - `dist` 是自包含发布版（约 169 MB，内含 .NET 8 运行时），**不需要**另外装 .NET。仓库里不带这个目录，按上面的命令自己 publish 一次即可。
-- 开机自启：`Win+R` → `shell:startup` → 把 `LyricBar.exe` 的快捷方式丢进去。
+- 开机自启：设置界面「概览」里的「开机自动启动」开关（写 `HKCU\...\CurrentVersion\Run`），也可以手动 `Win+R` → `shell:startup` 丢快捷方式。
 - 退出：托盘图标右键 → 退出，或者条上右键 → 退出。
 - `LyricBar.exe --settings` 启动时直接打开设置界面。
 
@@ -55,7 +55,7 @@ dist\LyricBar.exe
 
 ![概览](docs/settings-page0.png)
 
-**任务栏内嵌** —— 水平位置（靠图标 / 居中 / 靠托盘）、整体宽度、歌词宽度、滚动方式与速度、边缘渐隐、歌名宽度比例、歌名滚动间隔、外观（纯文字 / 圆角卡片）、强调色融合度、字号、**背景不透明度**、显示项：
+**任务栏内嵌** —— 水平位置（靠图标 / 居中 / 靠托盘）、整体宽度、歌词宽度、**全屏时的显示层级（让位 / 始终置顶）**、滚动方式与速度、边缘渐隐、歌名宽度比例、歌名滚动间隔、外观（纯文字 / 圆角卡片）、强调色融合度、字号、**背景不透明度**、**背景色（跟随任务栏 / 自定义 #RRGGBB 或预设色）**、显示项：
 
 ![任务栏内嵌设置](docs/settings-page1.png)
 
